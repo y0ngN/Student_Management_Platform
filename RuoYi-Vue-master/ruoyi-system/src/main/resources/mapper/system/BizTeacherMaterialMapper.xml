@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BizTeacherMaterialMapper">
+
+    <resultMap id="BizTeacherMaterialResult" type="BizTeacherMaterial">
+        <id property="materialId" column="material_id" />
+        <result property="teacherUserId" column="teacher_user_id" />
+        <result property="teacherName" column="teacher_name" />
+        <result property="departmentName" column="department_name" />
+        <result property="title" column="title" />
+        <result property="materialType" column="material_type" />
+        <result property="projectAmount" column="project_amount" />
+        <result property="description" column="description" />
+        <result property="submitDate" column="submit_date" />
+        <result property="attachment" column="attachment" />
+        <result property="auditStatus" column="audit_status" />
+        <result property="auditByUserId" column="audit_by_user_id" />
+        <result property="auditByName" column="audit_by_name" />
+        <result property="auditTime" column="audit_time" />
+        <result property="auditRemark" column="audit_remark" />
+        <result property="createBy" column="create_by" />
+        <result property="createTime" column="create_time" />
+        <result property="updateBy" column="update_by" />
+        <result property="updateTime" column="update_time" />
+        <result property="remark" column="remark" />
+    </resultMap>
+
+    <sql id="baseSelectTeacherMaterial">
+        select material_id, teacher_user_id, teacher_name, department_name, title, material_type, project_amount,
+               description, submit_date, attachment, audit_status, audit_by_user_id, audit_by_name, audit_time,
+               audit_remark, create_by, create_time, update_by, update_time, remark
+        from biz_teacher_material
+    </sql>
+
+    <sql id="teacherMaterialWhere">
+        <where>
+            <if test="teacherUserId != null">and teacher_user_id = #{teacherUserId}</if>
+            <if test="teacherName != null and teacherName != ''">and teacher_name like concat('%', #{teacherName}, '%')</if>
+            <if test="departmentName != null and departmentName != ''">and department_name like concat('%', #{departmentName}, '%')</if>
+            <if test="title != null and title != ''">and title like concat('%', #{title}, '%')</if>
+            <if test="materialType != null and materialType != ''">and material_type = #{materialType}</if>
+            <if test="auditStatus != null and auditStatus != ''">and audit_status = #{auditStatus}</if>
+            <if test="beginDate != null">and date(submit_date) &gt;= date(#{beginDate})</if>
+            <if test="endDate != null">and date(submit_date) &lt;= date(#{endDate})</if>
+        </where>
+    </sql>
+
+    <select id="selectTeacherMaterialById" parameterType="Long" resultMap="BizTeacherMaterialResult">
+        <include refid="baseSelectTeacherMaterial"/>
+        where material_id = #{materialId}
+    </select>
+
+    <select id="selectTeacherMaterialList" parameterType="BizTeacherMaterial" resultMap="BizTeacherMaterialResult">
+        <include refid="baseSelectTeacherMaterial"/>
+        <include refid="teacherMaterialWhere"/>
+        order by material_id desc
+    </select>
+
+    <insert id="insertTeacherMaterial" parameterType="BizTeacherMaterial" useGeneratedKeys="true" keyProperty="materialId">
+        insert into biz_teacher_material
+        (
+            teacher_user_id, teacher_name, department_name, title, material_type, project_amount,
+            description, submit_date, attachment, audit_status, create_by, create_time, remark
+        )
+        values
+        (
+            #{teacherUserId}, #{teacherName}, #{departmentName}, #{title}, #{materialType}, #{projectAmount},
+            #{description}, #{submitDate}, #{attachment}, #{auditStatus}, #{createBy}, sysdate(), #{remark}
+        )
+    </insert>
+
+    <update id="updateTeacherMaterial" parameterType="BizTeacherMaterial">
+        update biz_teacher_material
+        <set>
+            <if test="teacherName != null">teacher_name = #{teacherName},</if>
+            <if test="departmentName != null">department_name = #{departmentName},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="materialType != null">material_type = #{materialType},</if>
+            <if test="projectAmount != null">project_amount = #{projectAmount},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="submitDate != null">submit_date = #{submitDate},</if>
+            <if test="attachment != null">attachment = #{attachment},</if>
+            <if test="auditStatus != null">audit_status = #{auditStatus},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            update_time = sysdate()
+        </set>
+        where material_id = #{materialId}
+    </update>
+
+    <update id="auditTeacherMaterial" parameterType="BizTeacherMaterial">
+        update biz_teacher_material
+        <set>
+            audit_status = #{auditStatus},
+            audit_by_user_id = #{auditByUserId},
+            audit_by_name = #{auditByName},
+            audit_time = #{auditTime},
+            audit_remark = #{auditRemark},
+            update_by = #{updateBy},
+            update_time = sysdate()
+        </set>
+        where material_id = #{materialId}
+    </update>
+
+    <delete id="deleteTeacherMaterialByIds" parameterType="Long">
+        delete from biz_teacher_material where material_id in
+        <foreach collection="array" item="materialId" open="(" separator="," close=")">
+            #{materialId}
+        </foreach>
+    </delete>
+
+    <select id="countTeacherMaterial" parameterType="BizTeacherMaterial" resultType="long">
+        select count(1)
+        from biz_teacher_material
+        <include refid="teacherMaterialWhere"/>
+    </select>
+
+    <select id="countTeacherMaterialApproved" parameterType="BizTeacherMaterial" resultType="long">
+        select count(1)
+        from biz_teacher_material
+        <where>
+            audit_status = '1'
+            <if test="teacherUserId != null">and teacher_user_id = #{teacherUserId}</if>
+            <if test="teacherName != null and teacherName != ''">and teacher_name like concat('%', #{teacherName}, '%')</if>
+            <if test="departmentName != null and departmentName != ''">and department_name like concat('%', #{departmentName}, '%')</if>
+            <if test="title != null and title != ''">and title like concat('%', #{title}, '%')</if>
+            <if test="materialType != null and materialType != ''">and material_type = #{materialType}</if>
+            <if test="beginDate != null">and date(submit_date) &gt;= date(#{beginDate})</if>
+            <if test="endDate != null">and date(submit_date) &lt;= date(#{endDate})</if>
+        </where>
+    </select>
+
+    <select id="sumApprovedProjectAmount" parameterType="BizTeacherMaterial" resultType="java.math.BigDecimal">
+        select ifnull(sum(project_amount), 0)
+        from biz_teacher_material
+        <where>
+            audit_status = '1'
+            <if test="teacherUserId != null">and teacher_user_id = #{teacherUserId}</if>
+            <if test="teacherName != null and teacherName != ''">and teacher_name like concat('%', #{teacherName}, '%')</if>
+            <if test="departmentName != null and departmentName != ''">and department_name like concat('%', #{departmentName}, '%')</if>
+            <if test="title != null and title != ''">and title like concat('%', #{title}, '%')</if>
+            <if test="materialType != null and materialType != ''">and material_type = #{materialType}</if>
+            <if test="beginDate != null">and date(submit_date) &gt;= date(#{beginDate})</if>
+            <if test="endDate != null">and date(submit_date) &lt;= date(#{endDate})</if>
+        </where>
+    </select>
+
+    <select id="countTeacherMaterialByDepartment" parameterType="BizTeacherMaterial" resultType="java.util.HashMap">
+        select ifnull(department_name, '未填写') as name, count(1) as value
+        from biz_teacher_material
+        <include refid="teacherMaterialWhere"/>
+        group by ifnull(department_name, '未填写')
+        order by value desc
+    </select>
+
+    <select id="countTeacherMaterialByMonth" parameterType="BizTeacherMaterial" resultType="java.util.HashMap">
+        select date_format(submit_date, '%Y-%m') as month, count(1) as value
+        from biz_teacher_material
+        <include refid="teacherMaterialWhere"/>
+        group by date_format(submit_date, '%Y-%m')
+        order by month asc
+    </select>
+
+</mapper>

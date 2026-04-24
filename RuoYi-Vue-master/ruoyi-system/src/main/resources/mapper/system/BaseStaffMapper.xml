@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BaseStaffMapper">
+
+    <resultMap id="BaseStaffResult" type="BaseStaff">
+        <id property="staffId" column="StaffID" />
+        <result property="userId" column="UserID" />
+        <result property="realName" column="RealName" />
+        <result property="gender" column="Gender" />
+        <result property="idCard" column="IDCard" />
+        <result property="birthDate" column="BirthDate" />
+        <result property="deptId" column="DeptID" />
+        <result property="phone" column="Phone" />
+        <result property="email" column="Email" />
+        <result property="entryDate" column="EntryDate" />
+        <result property="staffStatus" column="StaffStatus" />
+    </resultMap>
+
+    <select id="selectByUserId" parameterType="Long" resultMap="BaseStaffResult">
+        select StaffID, UserID, RealName, Gender, IDCard, BirthDate, DeptID, Phone, Email, EntryDate, StaffStatus
+        from Base_Staff
+        where UserID = #{userId}
+        limit 1
+    </select>
+
+    <select id="selectByStaffId" parameterType="String" resultMap="BaseStaffResult">
+        select StaffID, UserID, RealName, Gender, IDCard, BirthDate, DeptID, Phone, Email, EntryDate, StaffStatus
+        from Base_Staff
+        where StaffID = #{staffId}
+        limit 1
+    </select>
+
+    <insert id="insertBaseStaff" parameterType="BaseStaff">
+        insert into Base_Staff
+        (StaffID, UserID, RealName, Gender, IDCard, BirthDate, DeptID, Phone, Email, EntryDate, StaffStatus)
+        values
+        (#{staffId}, #{userId}, #{realName}, #{gender}, #{idCard}, #{birthDate}, #{deptId}, #{phone}, #{email}, #{entryDate}, #{staffStatus})
+    </insert>
+
+    <update id="updateBaseStaff" parameterType="BaseStaff">
+        update Base_Staff
+        <set>
+            <if test="userId != null">UserID = #{userId},</if>
+            <if test="realName != null">RealName = #{realName},</if>
+            <if test="gender != null">Gender = #{gender},</if>
+            <if test="idCard != null">IDCard = #{idCard},</if>
+            <if test="birthDate != null">BirthDate = #{birthDate},</if>
+            <if test="deptId != null">DeptID = #{deptId},</if>
+            <if test="phone != null">Phone = #{phone},</if>
+            <if test="email != null">Email = #{email},</if>
+            <if test="entryDate != null">EntryDate = #{entryDate},</if>
+            <if test="staffStatus != null">StaffStatus = #{staffStatus},</if>
+        </set>
+        where StaffID = #{staffId}
+    </update>
+
+</mapper>

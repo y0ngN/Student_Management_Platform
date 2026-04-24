@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BaseStudentMapper">
+
+    <resultMap id="BaseStudentResult" type="BaseStudent">
+        <id property="studentId" column="StudentID" />
+        <result property="userId" column="UserID" />
+        <result property="studentName" column="StudentName" />
+        <result property="major" column="Major" />
+        <result property="currentGrade" column="CurrentGrade" />
+        <result property="deptId" column="DeptID" />
+    </resultMap>
+
+    <select id="selectByUserId" parameterType="Long" resultMap="BaseStudentResult">
+        select StudentID, UserID, StudentName, Major, CurrentGrade, DeptID
+        from Base_Student
+        where UserID = #{userId}
+        limit 1
+    </select>
+
+    <select id="selectByStudentId" parameterType="String" resultMap="BaseStudentResult">
+        select StudentID, UserID, StudentName, Major, CurrentGrade, DeptID
+        from Base_Student
+        where StudentID = #{studentId}
+        limit 1
+    </select>
+
+    <insert id="insertBaseStudent" parameterType="BaseStudent">
+        insert into Base_Student
+        (StudentID, UserID, StudentName, Major, CurrentGrade, DeptID)
+        values
+        (#{studentId}, #{userId}, #{studentName}, #{major}, #{currentGrade}, #{deptId})
+    </insert>
+
+    <update id="updateBaseStudent" parameterType="BaseStudent">
+        update Base_Student
+        <set>
+            <if test="userId != null">UserID = #{userId},</if>
+            <if test="studentName != null">StudentName = #{studentName},</if>
+            <if test="major != null">Major = #{major},</if>
+            <if test="currentGrade != null">CurrentGrade = #{currentGrade},</if>
+            <if test="deptId != null">DeptID = #{deptId},</if>
+        </set>
+        where StudentID = #{studentId}
+    </update>
+
+</mapper>

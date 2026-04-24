@@ -1,0 +1,269 @@
+FILE: D:\xwechat_files\wxid_54mrn6niv1t122_f63f\msg\file\2026-03\后端数据表结构设计(2).docx
+PARAGRAPHS
+[1] 一：教研部分
+[2] 1. 竞赛获奖表 (Edu_CompetitionAward)
+[3] 2. 大创项目表 (Edu_InnovationProject)
+[4] 3. 教研奖励表 (Edu_TeachingAward)
+[6] 二：科研部分
+[7] 1. 科研项目表 (Res_Project)
+[8] 2. 科研奖励表 (Res_ResearchAward)
+[9] 3. 论文信息表 (Res_Paper)
+[11] 三：人事
+[12] 1. 部门/学院字典表 (Dic_Department)
+[13] 2. 职称/岗位等级字典表 (Dic_JobTitle)
+[14] 3. 竞赛分级字典表 (Dic_CompetitionLevel)
+[15] 4. 教职工基础信息表 (Base_Staff)
+[16] 5. 学院人事记录明细表 (Staff_College_Detail)
+[17] 6. 学校人事记录明细表 (Staff_University_Detail/Record)
+[18] 7. 个人荣誉明细表 (Staff_Honors_Detail)
+TABLES
+--- TABLE 1 rows=27 cols=4 ---
+R1: 字段名 | 数据类型 | 约束 | 备注
+R2: AwardID | INT | PRIMARY KEY, IDENTITY(1,1) | 自动递增主键
+R3: StudentID | NVARCHAR(50) | FOREIGN KEY REFERENCES Base_Student | 学生学号
+R4: RealName | NVARCHAR(50) | NOT NULL | 学生姓名
+R5: DeptName | NVARCHAR(100) | - | 所在学院
+R6: CompetitionName | NVARCHAR(200) | NOT NULL | 竞赛名称 (按证书规范填报)
+R7: CompetitionSession | NVARCHAR(50) | - | 赛届
+R8: CompetitionCategory | NVARCHAR(50) | - | 赛类 (如：A类、B类)
+R9: LevelID | INT | FOREIGN KEY REFERENCES Dic_CompetitionLevel | 获奖级别 (关联字典表)
+R10: SubjectGroup | NVARCHAR(100) | - | 比赛科目/组别 (参赛赛道)
+R11: AwardProjectName | NVARCHAR(200) | - | 获奖项目/作品名称
+R12: AwardGrade | NVARCHAR(50) | - | 获奖等级 (如：一等奖、金奖)
+R13: OtherAwardLevel | NVARCHAR(100) | - | 其他获奖等别/级别
+R14: AwardDate | CHAR(6) | - | 获奖时间 (格式: 202205)
+R15: HostUnit | NVARCHAR(200) | - | 主办单位
+R16: CertificateNumber | NVARCHAR(100) | - | 证书编号
+R17: AwardDocURL | NVARCHAR(500) | - | 获奖批文或竞赛官网公示网址
+R18: IsTeamAward | NVARCHAR(20) | - | 团队获奖/个人获奖
+R19: TeamSize | INT | - | 团队人数
+R20: MemberOrder | INT | - | 个人位次
+R21: TeamMembers | NVARCHAR(MAX) | - | 团队成员姓名 (以顿号分隔开)
+R22: PrimaryAdvisorID | NVARCHAR(50) | FOREIGN KEY REFERENCES Base_Staff | 前二位指导教师：第一导师
+R23: PrimaryAdvisorDept | NVARCHAR(100) | - | 指导教师1所在学院
+R24: SecondaryAdvisorID | NVARCHAR(50) | FOREIGN KEY REFERENCES Base_Staff | 前二位指导教师：第二导师
+R25: SecondaryAdvisorDept | NVARCHAR(100) | - | 指导教师2所在学院
+R26: AuditStatus | NVARCHAR(20) | DEFAULT '待审核' | 审核状态
+R27: Remarks | NVARCHAR(MAX) | - | 备注
+--- TABLE 2 rows=20 cols=4 ---
+R1: 字段名 | 数据类型 | 约束 | 备注
+R2: ProjectID | INT | PRIMARY KEY, IDENTITY(1,1) | 自动递增主键
+R3: ProjectName | NVARCHAR(200) | NOT NULL | 项目名称
+R4: ApplicationYear | CHAR(4) | - | 申报年限
+R5: ApplicationDate | DATE | - | 申报时间
+R6: ApprovalDate | DATE | - | 立项时间
+R7: ProjectCategory | NVARCHAR(100) | - | 项目类别
+R8: LeaderID | NVARCHAR(50) | FOREIGN KEY REFERENCES Base_Student | 学生负责人
+R9: TeamMembers | NVARCHAR(MAX) | - | 参与成员
+R10: AdvisorID | NVARCHAR(50) | FOREIGN KEY REFERENCES Base_Staff | 指导教师
+R11: PrimaryDiscipline | NVARCHAR(100) | - | 一级学科
+R12: UnitName | NVARCHAR(100) | - | 单位
+R13: ProjectBrief | NVARCHAR(MAX) | - | 项目简介
+R14: FaceStatus | NVARCHAR(100) | - | 面貌
+R15: SoftwareCopyright | NVARCHAR(100) | - | 软著
+R16: PlanDoc | NVARCHAR(500) | - | 计划书 (文件路径)
+R17: ApprovalDoc | NVARCHAR(500) | - | 立项书 (文件路径)
+R18: MidtermDoc | NVARCHAR(500) | - | 中检书 (文件路径)
+R19: OtherAttachment | NVARCHAR(500) | - | 其他附件
+R20: IsExcellent | BIT | DEFAULT 0 | 是否优秀
+--- TABLE 3 rows=11 cols=4 ---
+R1: 字段名 | 数据类型 | 约束 | 备注
+R2: TeachingAwardID | INT | PRIMARY KEY, IDENTITY(1,1) | 序号/主键
+R3: AwardName | NVARCHAR(200) | NOT NULL | 奖励名称
+R4: ResultName | NVARCHAR(200) | - | 成果名称
+R5: AwardLevel | NVARCHAR(50) | - | 获奖级别
+R6: AwardDate | DATE | - | 获奖日期
+R7: AllParticipants | NVARCHAR(MAX) | - | 所有完成人
+R8: IssuingAuthority | NVARCHAR(200) | - | 发证机关
+R9: AwardGrade | NVARCHAR(50) | - | 获奖等级
+R10: UnitRanking | INT | - | 单位排名
+R11: CertificateNumber | NVARCHAR(100) | - | 证书号
+--- TABLE 4 rows=11 cols=4 ---
+R1: 字段名 | 数据类型 | 约束 | 备注
+R2: ProjectID | INT | PRIMARY KEY, IDENTITY(1,1) | 自动递增主键
+R3: ProjectCode | NVARCHAR(100) | - | 项目编号
+R4: ProjectName | NVARCHAR(300) | - | 项目名称
+R5: ProjectSource | NVARCHAR(200) | - | 项目来源
+R6: LeaderID | NVARCHAR(50) | FOREIGN KEY REFERENCES Base_Staff | 负责人 (教职工号)
+R7: SignYear | INT | - | 项目签署所属年度
+R8: SignDate | DATE | - | 合同签订日期
+R9: EndDate | DATE | - | 合同截止日期
+R10: ContractAmount | DECIMAL(12,2) | - | 合同金额
+R11: ReceivedAmount | DECIMAL(12,2) | - | 到账金额
+--- TABLE 5 rows=11 cols=4 ---
+R1: 字段名 | 数据类型 | 约束 | 备注
+R2: AwardID | INT | PRIMARY KEY, IDENTITY(1,1) | 自动递增主键
+R3: AwardName | NVARCHAR(200) | - | 奖励名称
+R4: AchievementName | NVARCHAR(300) | - | 成果名称
+R5: AwardLevel | NVARCHAR(50) | - | 获奖级别
+R6: AwardDate | DATE | - | 获奖日期
+R7: CompletedBy | NVARCHAR(500) | - | 所有完成人
+R8: CertificateOrg | NVARCHAR(200) | - | 发证机关
+R9: UnitRank | NVARCHAR(50) | - | 获奖等级单位排名
+R10: CertificateNo | NVARCHAR(100) | - | 证书号
+R11: MainAchievement | NVARCHAR(500) | - | 主要成果
+--- TABLE 6 rows=18 cols=4 ---
+R1: 字段名 | 数据类型 | 约束 | 备注
+R2: PaperID | INT | PRIMARY KEY, IDENTITY(1,1) | 自动递增主键
+R3: PaperType | NVARCHAR(50) | - | 论文类型 (SCI / 卓越期刊 / CCF会议)
+R4: Title | NVARCHAR(300) | NOT NULL | 论文题目
+R5: JournalOrConf | NVARCHAR(300) | - | 发表期刊/会议名称
+R6: AuthorInfo | NVARCHAR(500) | - | 作者信息 (含位次、署名单位等)
+R7: FirstAuthorID | NVARCHAR(50) | FOREIGN KEY REFERENCES Base_Staff | 第一作者 (教职工号)
+R8: CorrespondingAuthor | NVARCHAR(200) | - | 通讯作者信息
+R9: PublishDate | DATE | - | 发表日期
+R10: SCI_Zone | NVARCHAR(50) | - | SCI分区 (如一区、二区)
+R11: CCF_Rank | NVARCHAR(10) | - | CCF级别 (A/B/C)
+R12: IsRecommendedJournal | BIT | - | 是否为推荐期刊
+R13: IsTopJournal | BIT | - | 是否为卓越期刊/顶刊
+R14: IsFirstUnit | BIT | - | 是否第一单位 (青大)
+R15: IsHighCited | BIT | - | 是否高被引论文
+R16: PaperCategory | NVARCHAR(50) | - | 论文归属
+R17: Score | INT | - | 积分/权重分
+R18: Remark | NVARCHAR(500) | - | ⭐调研要求：所有论文增加的备注列
+--- TABLE 7 rows=4 cols=4 ---
+R1: 字段 | 数据类型 | 约束 | 备注
+R2: DeptID | INT | PRIMARY KEY IDENTITY(1,1) | 部门ID，自增
+R3: DeptName | NVARCHAR(100) | NOT NULL | 部门名称 (如：计算机科学技术学院)
+R4: DeptType | NVARCHAR(50) | - | 部门类型 (教学部门、行政部门)
+--- TABLE 8 rows=4 cols=4 ---
+R1: 字段 | 数据类型 | 约束 | 备注
+R2: TitleID | INT | PRIMARY KEY IDENTITY(1,1) | 职称ID，自增
+R3: TitleName | NVARCHAR(50) | NOT NULL | 职称名称 (如：教授、副教授、讲师)
+R4: TitleCategory | NVARCHAR(50) | - | 职称类别 (教师类、管理类、工勤类)
+--- TABLE 9 rows=3 cols=4 ---
+R1: 字段 | 数据类型 | 约束 | 备注
+R2: LevelID | INT | PRIMARY KEY IDENTITY(1,1) | 级别ID，自增
+R3: LevelName | NVARCHAR(50) | NOT NULL | 级别名称 (如：国赛、省赛、校级)
+--- TABLE 10 rows=11 cols=4 ---
+R1: 字段 | 数据类型 | 约束 | 备注
+R2: StaffID | NVARCHAR(50) | PRIMARY KEY | 教职工号
+R3: RealName | NVARCHAR(50) | NOT NULL | 姓名
+R4: Gender | NVARCHAR(10) | - | 性别
+R5: IDCard | VARCHAR(18) | UNIQUE | 身份证号
+R6: BirthDate | DATE | - | 出生年月
+R7: DeptID | INT | FOREIGN KEY REFERENCES Dic_Department | 所属部门ID
+R8: Phone | VARCHAR(20) | - | 手机号
+R9: Email | NVARCHAR(100) | - | 邮箱
+R10: EntryDate | DATE | - | 来校时间/入职时间
+R11: StaffStatus | NVARCHAR(20) | DEFAULT '在职' | 人员状态 (在职、离职、退休)
+--- TABLE 11 rows=43 cols=4 ---
+R1: 字段 | 数据类型 | 约束 | 备注
+R2: EmployeeID | NVARCHAR(50) | PRIMARY KEY, FOREIGN KEY | 教职工号 (关联 Base_Staff)
+R3: FullName | NVARCHAR(50) | - | 姓名
+R4: Gender | NVARCHAR(10) | - | 性别
+R5: Ethnicity | NVARCHAR(20) | - | 民族
+R6: BirthDate | DATE | - | 出生年月
+R7: Age | INT | - | 年龄
+R8: EntryDate | DATE | - | 来校时间
+R9: RetirementYear | NVARCHAR(10) | - | 拟退休年
+R10: Department | NVARCHAR(100) | - | 部门
+R11: HighestEducation | NVARCHAR(50) | - | 最高学历
+R12: HighestDegree | NVARCHAR(50) | - | 最高学位
+R13: HighestEduSchool | NVARCHAR(100) | - | 最高学历毕业院校
+R14: HighestEduMajor | NVARCHAR(100) | - | 所学专业
+R15: HighestEduCategory | NVARCHAR(100) | - | 所属门类
+R16: HighestEduStartDate | DATE | - | 最高学历开始时间
+R17: HighestEduEndDate | DATE | - | 最高学历毕业时间
+R18: PoliticalAffiliation | NVARCHAR(50) | - | 党派
+R19: JoinPartyDate | DATE | - | 入党时间
+R20: FullMemberDate | DATE | - | 转正时间
+R21: PartyAdminPost | NVARCHAR(100) | - | 党政职务
+R22: AppointDate | DATE | - | 任职时间
+R23: JobTitle | NVARCHAR(100) | - | 职称
+R24: TitleEvalDate | DATE | - | 评聘时间
+R25: Category | NVARCHAR(50) | - | 分类
+R26: PostPosition | NVARCHAR(100) | - | 岗位
+R27: CurrentPostAppointDate | DATE | - | 现岗位聘用时间
+R28: IDCardNumber | VARCHAR(18) | - | 身份证号
+R29: PhoneNumber | VARCHAR(20) | - | 手机号
+R30: TalentTitle | NVARCHAR(100) | - | 人才称号
+R31: TalentEvalDate | DATE | - | 人才评聘时间
+R32: Remarks | NVARCHAR(MAX) | - | 备注
+R33: HomeAddress | NVARCHAR(255) | - | 住址
+R34: FirstEducation | NVARCHAR(50) | - | 第一学历
+R35: FirstDegree | NVARCHAR(50) | - | 第一学位
+R36: FirstEduGradDate | DATE | - | 毕业时间
+R37: FirstEduSchool | NVARCHAR(100) | - | 毕业院校
+R38: FirstEduMajor | NVARCHAR(100) | - | 所学专业
+R39: Email | NVARCHAR(100) | - | 邮箱
+R40: MaritalStatus | NVARCHAR(20) | - | 婚否
+R41: EmergencyContact | NVARCHAR(50) | - | 紧急联系人
+R42: EmergencyPhone | VARCHAR(20) | - | 紧急联系人手机号
+R43: NativePlace | NVARCHAR(100) | - | 籍贯
+--- TABLE 12 rows=63 cols=4 ---
+R1: 字段 | 数据类型 | 约束 | 备注
+R2: RecordKey | NVARCHAR(100) | PRIMARY KEY | 记录主键
+R3: EmployeeID | NVARCHAR(50) | NOT NULL, FOREIGN KEY | 教职工号 (关联 Base_Staff)
+R4: FullName | NVARCHAR(50) | - | 姓名
+R5: NamePinyin | NVARCHAR(100) | - | 姓名拼音
+R6: Gender | NVARCHAR(10) | - | 性别
+R7: BirthDate | DATE | - | 出生日期
+R8: Age | INT | - | 年龄
+R9: NativePlace | NVARCHAR(100) | - | 籍贯
+R10: Nationality | NVARCHAR(50) | - | 国籍(地区)
+R11: Ethnicity | NVARCHAR(20) | - | 民族
+R12: StartWorkDate | DATE | - | 参加工作年月
+R13: TeachingStartDate | DATE | - | 从教年月
+R14: PoliticalStatus | NVARCHAR(50) | - | 政治面貌
+R15: JoinPartyDate | DATE | - | 参加党派日期
+R16: ExpectedRetirementDate | DATE | - | 预计离退休日期
+R17: ArchivesBirthDate | DATE | - | 档案出生日期
+R18: HighestEducation | NVARCHAR(50) | - | 最高学历
+R19: GraduationDate | DATE | - | 毕业年月
+R20: GraduationSchool | NVARCHAR(100) | - | 毕业学校
+R21: MajorName | NVARCHAR(100) | - | 所学专业
+R22: HighestDegree | NVARCHAR(50) | - | 最高学位
+R23: DegreeDate | DATE | - | 授予学位年月
+R24: DegreeGrantingUnit | NVARCHAR(100) | - | 授予学位单位
+R25: EntryDate | DATE | - | 来校年月
+R26: StaffSource | NVARCHAR(50) | - | 教职工来源
+R27: StaffCategory | NVARCHAR(50) | - | 教职工类别
+R28: PersonalIdentity | NVARCHAR(50) | - | 个人身份
+R29: CurrentStatus | NVARCHAR(20) | - | 当前状态
+R30: SecondaryUnit | NVARCHAR(100) | - | 二级单位
+R31: TeacherType | NVARCHAR(50) | - | 教师类型
+R32: CurrentDepartment | NVARCHAR(100) | - | 所在部门
+R33: AdminPostLevel | NVARCHAR(50) | - | 党政职务级别
+R34: MainAdminPost | NVARCHAR(100) | - | 党政主职
+R35: AppointmentDept | NVARCHAR(100) | - | 任职部门
+R36: PrimaryLevel | NVARCHAR(50) | - | 主职级别
+R37: TeacherCertNumber | NVARCHAR(100) | - | 教师资格证号
+R38: TeacherCertDate | DATE | - | 教师资格获得日期
+R39: SubjectCategory | NVARCHAR(50) | - | 学科类别
+R40: FirstLevelSubject | NVARCHAR(100) | - | 一级学科
+R41: SecondLevelSubject | NVARCHAR(100) | - | 二级学科
+R42: ResearchDirection | NVARCHAR(100) | - | 研究方向
+R43: IsFullTimePsychConsultant | BIT | - | 是否专职从事心理咨询工作
+R44: HasPsychCert | BIT | - | 是否持有心理咨询资格证书
+R45: ProfessionalTitle | NVARCHAR(100) | - | 专业技术职务
+R46: TitleLevel | NVARCHAR(50) | - | 专业技术职务级别
+R47: TitleEvalDate | DATE | - | 专业技术职务评定年月
+R48: IsManagementPost | BIT | - | 是否管理岗位
+R49: IsTechnicalPost | BIT | - | 是否专业技术岗位
+R50: TechnicalPostCategory | NVARCHAR(50) | - | 专业技术岗位类别
+R51: IsWorkPost | BIT | - | 是否工勤岗位
+R52: AppointmentPost | NVARCHAR(100) | - | 聘任岗位
+R53: AppointmentPostLevel | NVARCHAR(50) | - | 聘任岗位等级
+R54: PostAppointmentDate | DATE | - | 岗位聘任时间
+R55: PartTimePost | NVARCHAR(100) | - | 兼聘岗位
+R56: PartTimePostLevel | NVARCHAR(50) | - | 兼聘岗位等级
+R57: PartTimeDate | DATE | - | 兼聘日期
+R58: IsIndustryPersonnel | BIT | - | 是否产业人员
+R59: IsDualRole | BIT | - | 是否双肩挑
+R60: DualRoleUnit | NVARCHAR(100) | - | 双肩挑所在单位
+R61: IsDoubleQualified | BIT | - | 是否双师型教师
+R62: IsTeachingUndergrad | BIT | - | 是否为本科生上课
+R63: CounselorCategory | NVARCHAR(50) | - | 辅导员类别
+--- TABLE 13 rows=11 cols=4 ---
+R1: 字段 | 数据类型 | 约束 | 备注
+R2: RecordID | INT | PRIMARY KEY IDENTITY(1,1) | 自增主键
+R3: EmployeeID | NVARCHAR(50) | NOT NULL, FOREIGN KEY | 教职工号 (关联 Base_Staff)
+R4: AwardYear | INT | - | 获奖年度
+R5: AwardUnitOrPerson | NVARCHAR(100) | - | 获奖单位/个人
+R6: HonorName | NVARCHAR(200) | - | 奖励 (荣誉) 名称
+R7: AwardLevel | NVARCHAR(50) | - | 奖励 (比赛) 级别
+R8: IssuingAuthority | NVARCHAR(200) | - | 表彰单位
+R9: DocNumber | NVARCHAR(100) | - | 发文年号
+R10: IssueDate | DATE | - | 发文日期
+R11: Remarks | NVARCHAR(MAX) | - | 备注

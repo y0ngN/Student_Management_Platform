@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.StaffUniversityDetailMapper">
+
+    <resultMap id="StaffUniversityDetailResult" type="StaffUniversityDetail">
+        <id property="employeeId" column="EmployeeID" />
+        <result property="adminPostLevel" column="AdminPostLevel" />
+        <result property="mainAdminPost" column="MainAdminPost" />
+        <result property="teacherCertNumber" column="TeacherCertNumber" />
+        <result property="subjectCategory" column="SubjectCategory" />
+        <result property="researchDirection" column="ResearchDirection" />
+        <result property="isDoubleQualified" column="IsDoubleQualified" />
+        <result property="isTeachingUndergrad" column="IsTeachingUndergrad" />
+        <result property="counselorCategory" column="CounselorCategory" />
+    </resultMap>
+
+    <select id="selectByEmployeeId" parameterType="String" resultMap="StaffUniversityDetailResult">
+        select EmployeeID, AdminPostLevel, MainAdminPost, TeacherCertNumber, SubjectCategory, ResearchDirection,
+               IsDoubleQualified, IsTeachingUndergrad, CounselorCategory
+        from Staff_University_Detail
+        where EmployeeID = #{employeeId}
+        limit 1
+    </select>
+
+    <insert id="insertStaffUniversityDetail" parameterType="StaffUniversityDetail">
+        insert into Staff_University_Detail
+        (EmployeeID, AdminPostLevel, MainAdminPost, TeacherCertNumber, SubjectCategory, ResearchDirection,
+         IsDoubleQualified, IsTeachingUndergrad, CounselorCategory)
+        values
+        (#{employeeId}, #{adminPostLevel}, #{mainAdminPost}, #{teacherCertNumber}, #{subjectCategory}, #{researchDirection},
+         #{isDoubleQualified}, #{isTeachingUndergrad}, #{counselorCategory})
+    </insert>
+
+    <update id="updateStaffUniversityDetail" parameterType="StaffUniversityDetail">
+        update Staff_University_Detail
+        <set>
+            <if test="adminPostLevel != null">AdminPostLevel = #{adminPostLevel},</if>
+            <if test="mainAdminPost != null">MainAdminPost = #{mainAdminPost},</if>
+            <if test="teacherCertNumber != null">TeacherCertNumber = #{teacherCertNumber},</if>
+            <if test="subjectCategory != null">SubjectCategory = #{subjectCategory},</if>
+            <if test="researchDirection != null">ResearchDirection = #{researchDirection},</if>
+            <if test="isDoubleQualified != null">IsDoubleQualified = #{isDoubleQualified},</if>
+            <if test="isTeachingUndergrad != null">IsTeachingUndergrad = #{isTeachingUndergrad},</if>
+            <if test="counselorCategory != null">CounselorCategory = #{counselorCategory},</if>
+        </set>
+        where EmployeeID = #{employeeId}
+    </update>
+
+</mapper>

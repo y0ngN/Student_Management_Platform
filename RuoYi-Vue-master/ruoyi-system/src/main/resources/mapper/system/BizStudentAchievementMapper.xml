@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BizStudentAchievementMapper">
+
+    <resultMap id="BizStudentAchievementResult" type="BizStudentAchievement">
+        <id property="achievementId" column="achievement_id" />
+        <result property="studentUserId" column="student_user_id" />
+        <result property="studentName" column="student_name" />
+        <result property="studentNo" column="student_no" />
+        <result property="departmentName" column="department_name" />
+        <result property="achievementTitle" column="achievement_title" />
+        <result property="achievementType" column="achievement_type" />
+        <result property="achievementLevel" column="achievement_level" />
+        <result property="awardDate" column="award_date" />
+        <result property="description" column="description" />
+        <result property="attachment" column="attachment" />
+        <result property="auditStatus" column="audit_status" />
+        <result property="auditByUserId" column="audit_by_user_id" />
+        <result property="auditByName" column="audit_by_name" />
+        <result property="auditTime" column="audit_time" />
+        <result property="auditRemark" column="audit_remark" />
+        <result property="createBy" column="create_by" />
+        <result property="createTime" column="create_time" />
+        <result property="updateBy" column="update_by" />
+        <result property="updateTime" column="update_time" />
+        <result property="remark" column="remark" />
+    </resultMap>
+
+    <sql id="baseSelectStudentAchievement">
+        select achievement_id, student_user_id, student_name, student_no, department_name, achievement_title,
+               achievement_type, achievement_level, award_date, description, attachment, audit_status,
+               audit_by_user_id, audit_by_name, audit_time, audit_remark, create_by, create_time,
+               update_by, update_time, remark
+        from biz_student_achievement
+    </sql>
+
+    <sql id="studentAchievementWhere">
+        <where>
+            <if test="studentUserId != null">and student_user_id = #{studentUserId}</if>
+            <if test="studentName != null and studentName != ''">and student_name like concat('%', #{studentName}, '%')</if>
+            <if test="studentNo != null and studentNo != ''">and student_no like concat('%', #{studentNo}, '%')</if>
+            <if test="departmentName != null and departmentName != ''">and department_name like concat('%', #{departmentName}, '%')</if>
+            <if test="achievementTitle != null and achievementTitle != ''">and achievement_title like concat('%', #{achievementTitle}, '%')</if>
+            <if test="achievementType != null and achievementType != ''">and achievement_type = #{achievementType}</if>
+            <if test="achievementLevel != null and achievementLevel != ''">and achievement_level = #{achievementLevel}</if>
+            <if test="auditStatus != null and auditStatus != ''">and audit_status = #{auditStatus}</if>
+            <if test="beginDate != null">and date(award_date) &gt;= date(#{beginDate})</if>
+            <if test="endDate != null">and date(award_date) &lt;= date(#{endDate})</if>
+        </where>
+    </sql>
+
+    <select id="selectStudentAchievementById" parameterType="Long" resultMap="BizStudentAchievementResult">
+        <include refid="baseSelectStudentAchievement"/>
+        where achievement_id = #{achievementId}
+    </select>
+
+    <select id="selectStudentAchievementList" parameterType="BizStudentAchievement" resultMap="BizStudentAchievementResult">
+        <include refid="baseSelectStudentAchievement"/>
+        <include refid="studentAchievementWhere"/>
+        order by achievement_id desc
+    </select>
+
+    <insert id="insertStudentAchievement" parameterType="BizStudentAchievement" useGeneratedKeys="true" keyProperty="achievementId">
+        insert into biz_student_achievement
+        (
+            student_user_id, student_name, student_no, department_name, achievement_title,
+            achievement_type, achievement_level, award_date, description, attachment, audit_status,
+            create_by, create_time, remark
+        )
+        values
+        (
+            #{studentUserId}, #{studentName}, #{studentNo}, #{departmentName}, #{achievementTitle},
+            #{achievementType}, #{achievementLevel}, #{awardDate}, #{description}, #{attachment}, #{auditStatus},
+            #{createBy}, sysdate(), #{remark}
+        )
+    </insert>
+
+    <update id="updateStudentAchievement" parameterType="BizStudentAchievement">
+        update biz_student_achievement
+        <set>
+            <if test="studentName != null">student_name = #{studentName},</if>
+            <if test="studentNo != null">student_no = #{studentNo},</if>
+            <if test="departmentName != null">department_name = #{departmentName},</if>
+            <if test="achievementTitle != null">achievement_title = #{achievementTitle},</if>
+            <if test="achievementType != null">achievement_type = #{achievementType},</if>
+            <if test="achievementLevel != null">achievement_level = #{achievementLevel},</if>
+            <if test="awardDate != null">award_date = #{awardDate},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="attachment != null">attachment = #{attachment},</if>
+            <if test="auditStatus != null">audit_status = #{auditStatus},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            update_time = sysdate()
+        </set>
+        where achievement_id = #{achievementId}
+    </update>
+
+    <update id="auditStudentAchievement" parameterType="BizStudentAchievement">
+        update biz_student_achievement
+        <set>
+            audit_status = #{auditStatus},
+            audit_by_user_id = #{auditByUserId},
+            audit_by_name = #{auditByName},
+            audit_time = #{auditTime},
+            audit_remark = #{auditRemark},
+            update_by = #{updateBy},
+            update_time = sysdate()
+        </set>
+        where achievement_id = #{achievementId}
+    </update>
+
+    <delete id="deleteStudentAchievementByIds" parameterType="Long">
+        delete from biz_student_achievement where achievement_id in
+        <foreach collection="array" item="achievementId" open="(" separator="," close=")">
+            #{achievementId}
+        </foreach>
+    </delete>
+
+    <select id="countStudentAchievement" parameterType="BizStudentAchievement" resultType="long">
+        select count(1)
+        from biz_student_achievement
+        <include refid="studentAchievementWhere"/>
+    </select>
+
+    <select id="countStudentAchievementApproved" parameterType="BizStudentAchievement" resultType="long">
+        select count(1)
+        from biz_student_achievement
+        <where>
+            audit_status = '1'
+            <if test="studentUserId != null">and student_user_id = #{studentUserId}</if>
+            <if test="studentName != null and studentName != ''">and student_name like concat('%', #{studentName}, '%')</if>
+            <if test="studentNo != null and studentNo != ''">and student_no like concat('%', #{studentNo}, '%')</if>
+            <if test="departmentName != null and departmentName != ''">and department_name like concat('%', #{departmentName}, '%')</if>
+            <if test="achievementTitle != null and achievementTitle != ''">and achievement_title like concat('%', #{achievementTitle}, '%')</if>
+            <if test="achievementType != null and achievementType != ''">and achievement_type = #{achievementType}</if>
+            <if test="achievementLevel != null and achievementLevel != ''">and achievement_level = #{achievementLevel}</if>
+            <if test="beginDate != null">and date(award_date) &gt;= date(#{beginDate})</if>
+            <if test="endDate != null">and date(award_date) &lt;= date(#{endDate})</if>
+        </where>
+    </select>
+
+    <select id="countStudentAchievementByDepartment" parameterType="BizStudentAchievement" resultType="java.util.HashMap">
+        select ifnull(department_name, '未填写') as name, count(1) as value
+        from biz_student_achievement
+        <include refid="studentAchievementWhere"/>
+        group by ifnull(department_name, '未填写')
+        order by value desc
+    </select>
+
+    <select id="countStudentAchievementByMonth" parameterType="BizStudentAchievement" resultType="java.util.HashMap">
+        select date_format(award_date, '%Y-%m') as month, count(1) as value
+        from biz_student_achievement
+        <include refid="studentAchievementWhere"/>
+        group by date_format(award_date, '%Y-%m')
+        order by month asc
+    </select>
+
+</mapper>
