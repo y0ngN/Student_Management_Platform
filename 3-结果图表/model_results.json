@@ -1,0 +1,65 @@
+{
+  "linear_regression": {
+    "train_rmse": 4.273596987592723,
+    "test_rmse": 6.387985077606779,
+    "train_mape": 4.152795699229558,
+    "test_mape": 2.1306389719115373,
+    "train_r2": 0.997876016046269,
+    "test_r2": 0.9719197576125789,
+    "coefficients": {
+      "agc_command": 0.434414151180974,
+      "total_air_flow": -0.3975901062099897,
+      "total_primary_air": -0.12670354528324188,
+      "total_secondary_air": -0.5976690606938705,
+      "corrected_drum_level": -0.032263111994105975,
+      "air_ratio": 1.260049119748271,
+      "air_cmd": -0.23510076162062493,
+      "coal_A1": -0.0433760127532267,
+      "coal_A2": 0.05845914017765458,
+      "coal_B1": -0.004577821715601229,
+      "coal_B2": 0.01883936830459979,
+      "feed_water_valve": 0.15287521246728358,
+      "superheater_1_spray": 0.022361620254495614,
+      "superheater_2_spray": 0.0025244827770640587,
+      "to_hp_steam_temp": 0.05972319128307581,
+      "main_steam_flow": 0.53080554980743
+    }
+  },
+  "simple_rnn": {
+    "train_rmse": 9.767679300566487,
+    "test_rmse": 10.112965136381924,
+    "train_mape": 8.065058596022594,
+    "test_mape": 4.490319560073903,
+    "train_r2": 0.9889121250126405,
+    "test_r2": 0.9300174277055893,
+    "lookback": 12,
+    "hidden_units": 32
+  },
+  "data_info": {
+    "n_features": 16,
+    "n_train": 8477,
+    "n_test": 2120,
+    "feature_cols": [
+      "agc_command",
+      "total_air_flow",
+      "total_primary_air",
+      "total_secondary_air",
+      "corrected_drum_level",
+      "air_ratio",
+      "air_cmd",
+      "coal_A1",
+      "coal_A2",
+      "coal_B1",
+      "coal_B2",
+      "feed_water_valve",
+      "superheater_1_spray",
+      "superheater_2_spray",
+      "to_hp_steam_temp",
+      "main_steam_flow"
+    ],
+    "target_col": "actual_load",
+    "sampling_interval": "5 minutes",
+    "time_range": "2021-07-20 09:45:00 to 2021-08-26 04:45:00",
+    "target_unit": "MW"
+  }
+}
